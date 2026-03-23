@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Academy · CREST CPSA Study Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:     #d95718;
+  --orange-dim: rgba(217,87,24,0.15);
+  --orange-glo: rgba(217,87,24,0.3);
+  --bg:         #0d0f0e;
+  --surface:    #1d221f;
+  --surface2:   #252b27;
+  --surface3:   #2e352f;
+  --border:     #2a3129;
+  --border2:    #374035;
+  --text:       #f0f2f0;
+  --text2:      #9ba89d;
+  --text3:      #5a6659;
+  --green:      #4caf50;
+  --green-dim:  rgba(76,175,80,0.15);
+  --amber:      #ff9800;
+  --red:        #e53935;
+  --head: 'Barlow Semi Condensed', sans-serif;
+  --body: 'Hanken Grotesk', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--body); min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon { width: 34px; height: 34px; background: var(--orange); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--head); font-weight: 800; font-size: 14px; color: #fff; flex-shrink: 0; }
+.logo-name { font-family: var(--head); font-weight: 700; font-size: 15px; color: var(--text); letter-spacing: .3px; }
+.logo-name span { color: var(--orange); }
+.logo-sub { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.btn-reset {
+  background: none; border: 1px solid var(--border2);
+  border-radius: 7px; padding: 6px 14px;
+  font-family: var(--head); font-size: 12px; font-weight: 700;
+  color: var(--text3); cursor: pointer; transition: all .2s;
+  letter-spacing: .3px;
+}
+.btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+.exam-date-wrap { display: flex; align-items: center; gap: 8px; }
+.exam-date-label { font-size: 11px; color: var(--text3); font-family: var(--body); }
+.exam-date-input {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 7px; padding: 5px 10px;
+  font-family: var(--mono); font-size: 11px; color: var(--text);
+  cursor: pointer;
+}
+.exam-date-input:focus { outline: none; border-color: var(--orange); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 36px 32px 32px;
+}
+
+.hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+
+.hero-title { font-family: var(--head); font-size: 32px; font-weight: 800; color: var(--text); letter-spacing: -.5px; line-height: 1.1; }
+.hero-title span { color: var(--orange); }
+.hero-sub { font-size: 14px; color: var(--text2); margin-top: 8px; line-height: 1.6; max-width: 560px; }
+
+.countdown-box {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 12px; padding: 16px 20px; text-align: center; flex-shrink: 0;
+}
+.countdown-num { font-family: var(--head); font-size: 40px; font-weight: 800; color: var(--orange); line-height: 1; }
+.countdown-lbl { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .7px; margin-top: 4px; }
+.countdown-sub { font-size: 11px; color: var(--text2); margin-top: 6px; }
+
+/* Overall progress */
+.overall-progress { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+.progress-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 12px; }
+.progress-title { font-family: var(--head); font-size: 14px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .7px; }
+.progress-stats { display: flex; gap: 24px; }
+.pstat { text-align: center; }
+.pstat-n { font-family: var(--mono); font-size: 22px; font-weight: 700; line-height: 1; }
+.pstat-n.g { color: var(--green); }
+.pstat-n.a { color: var(--amber); }
+.pstat-n.r { color: var(--red); }
+.pstat-n.o { color: var(--orange); }
+.pstat-l { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+.big-bar { height: 10px; background: var(--border2); border-radius: 5px; overflow: hidden; position: relative; }
+.big-bar-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--orange), #ff8c42); transition: width .8s ease; }
+.bar-pct { position: absolute; right: 0; top: -18px; font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--orange); }
+.readiness { margin-top: 12px; display: flex; align-items: center; gap: 10px; }
+.readiness-lbl { font-size: 12px; color: var(--text2); }
+.readiness-badge {
+  background: var(--orange-dim); border: 1px solid var(--orange-glo);
+  border-radius: 20px; padding: 3px 12px;
+  font-family: var(--head); font-size: 11px; font-weight: 700;
+  color: var(--orange); letter-spacing: .3px;
+}
+.readiness-badge.ready { background: var(--green-dim); border-color: rgba(76,175,80,.4); color: var(--green); }
+
+/* ── MAIN LAYOUT ── */
+.main { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 280px); }
+
+/* ── SIDEBAR ── */
+.sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 20px 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; }
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.sidebar-title { font-family: var(--head); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text3); padding: 0 20px; margin-bottom: 10px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px; cursor: pointer;
+  transition: all .15s; border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--surface2); }
+.nav-item.active { background: var(--orange-dim); border-left-color: var(--orange); }
+
+.nav-dot {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--head); font-size: 11px; font-weight: 700;
+  flex-shrink: 0; transition: all .15s;
+}
+
+.nav-label { flex: 1; }
+.nav-label-title { font-family: var(--head); font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.nav-label-sub { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+.nav-pct { font-family: var(--mono); font-size: 11px; font-weight: 600; flex-shrink: 0; }
+
+.nav-mini-bar { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.nav-mini-fill { height: 100%; background: var(--orange); border-radius: 2px; transition: width .5s ease; }
+
+/* ── CONTENT ── */
+.content { padding: 28px 32px; }
+
+.section-header { margin-bottom: 24px; }
+.section-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--orange-dim); border: 1px solid var(--orange-glo);
+  border-radius: 20px; padding: 4px 12px;
+  font-family: var(--head); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; color: var(--orange);
+  margin-bottom: 10px;
+}
+.section-title { font-family: var(--head); font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -.3px; }
+.section-desc { font-size: 13px; color: var(--text2); margin-top: 6px; line-height: 1.6; max-width: 680px; }
+
+.section-progress {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;
+}
+.sp-ring { width: 52px; height: 52px; flex-shrink: 0; }
+.sp-info { flex: 1; }
+.sp-pct { font-family: var(--head); font-size: 22px; font-weight: 800; color: var(--text); }
+.sp-lbl { font-size: 11px; color: var(--text3); }
+.sp-bar { height: 6px; background: var(--border2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.sp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--orange), #ff8c42); border-radius: 3px; transition: width .6s ease; }
+.sp-counts { display: flex; gap: 16px; flex-shrink: 0; }
+.sp-count { text-align: center; }
+.sp-count-n { font-family: var(--mono); font-size: 18px; font-weight: 700; line-height: 1; }
+.sp-count-n.g { color: var(--green); }
+.sp-count-n.r { color: var(--red); }
+.sp-count-l { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: .4px; margin-top: 1px; }
+
+/* Topic cards */
+.topics-grid { display: flex; flex-direction: column; gap: 6px; }
+
+.topic-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 0;
+  transition: all .15s; overflow: hidden;
+}
+
+.topic-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; cursor: pointer;
+}
+
+.topic-row:hover { background: var(--surface2); }
+
+.topic-check {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .2s; font-size: 12px;
+  background: transparent;
+}
+
+.topic-card.done .topic-check {
+  background: var(--green); border-color: var(--green); color: #fff;
+}
+
+.topic-card.studying .topic-check {
+  background: var(--amber); border-color: var(--amber); color: #fff;
+}
+
+.topic-card.done { border-color: rgba(76,175,80,.35); background: rgba(76,175,80,.04); }
+.topic-card.studying { border-color: rgba(255,152,0,.35); background: rgba(255,152,0,.04); }
+
+.topic-id {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  color: var(--orange); background: var(--orange-dim);
+  border-radius: 4px; padding: 2px 7px; flex-shrink: 0;
+}
+
+.topic-text { flex: 1; }
+.topic-title { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.topic-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+.topic-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.btn-status {
+  padding: 4px 10px; border-radius: 5px;
+  font-family: var(--head); font-size: 10px; font-weight: 700;
+  cursor: pointer; transition: all .15s; border: 1px solid var(--border2);
+  background: none; color: var(--text3); letter-spacing: .3px;
+}
+.btn-status:hover { border-color: var(--text2); color: var(--text); }
+.btn-status.studying-btn { border-color: rgba(255,152,0,.4); color: var(--amber); background: rgba(255,152,0,.08); }
+.btn-status.done-btn { border-color: rgba(76,175,80,.4); color: var(--green); background: rgba(76,175,80,.08); }
+
+.topic-card.done .btn-status.done-btn,
+.topic-card.studying .btn-status.studying-btn { opacity: .5; cursor: default; }
+
+/* Notes area */
+.topic-notes-wrap { padding: 0 16px 14px 52px; display: none; }
+.topic-card.has-notes .topic-notes-wrap,
+.topic-card.notes-open .topic-notes-wrap { display: block; }
+.topic-notes {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 7px; padding: 10px 12px;
+  font-family: var(--body); font-size: 12px; color: var(--text);
+  resize: vertical; min-height: 60px; line-height: 1.6;
+}
+.topic-notes:focus { outline: none; border-color: var(--orange); }
+.topic-notes::placeholder { color: var(--text3); }
+.notes-toggle {
+  background: none; border: none; cursor: pointer;
+  font-size: 11px; color: var(--text3); padding: 0;
+  font-family: var(--body); transition: color .15s; flex-shrink: 0;
+}
+.notes-toggle:hover { color: var(--text2); }
+
+/* Legend */
+.legend {
+  display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
+.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.legend-dot.not-started { background: var(--surface3); border: 1px solid var(--border2); }
+.legend-dot.studying { background: var(--amber); }
+.legend-dot.done { background: var(--green); }
+
+/* Quick actions */
+.quick-actions { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.qa-btn {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 7px; padding: 6px 14px;
+  font-family: var(--head); font-size: 11px; font-weight: 700;
+  color: var(--text2); cursor: pointer; transition: all .2s; letter-spacing: .3px;
+}
+.qa-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .main { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .hero-top { flex-direction: column; }
+  .content { padding: 20px 16px; }
+  .header { padding: 0 16px; }
+  .hero { padding: 24px 16px; }
+  .progress-stats { gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">CA</div>
+    <div>
+      <div class="logo-name"><span>CYBER</span> ACADEMY</div>
+      <div class="logo-sub">CREST CPSA · Study Tracker</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="exam-date-wrap">
+      <span class="exam-date-label">Exam date:</span>
+      <input type="date" class="exam-date-input" id="examDate">
+    </div>
+    <button class="btn-reset" onclick="confirmReset()">↺ Reset</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-top">
+    <div>
+      <h1 class="hero-title">CREST CPSA<br><span>Syllabus Tracker</span></h1>
+      <p class="hero-sub">Track every topic across all 10 official CREST CPSA syllabus sections. Mark topics as studying or complete, add personal notes, and monitor your readiness to sit.</p>
+    </div>
+    <div class="countdown-box" id="countdownBox">
+      <div class="countdown-num" id="countdownNum">—</div>
+      <div class="countdown-lbl">Days to Exam</div>
+      <div class="countdown-sub" id="countdownSub">Set your exam date →</div>
+    </div>
+  </div>
+
+  <div class="overall-progress">
+    <div class="progress-top">
+      <div class="progress-title">Overall Progress</div>
+      <div class="progress-stats">
+        <div class="pstat"><div class="pstat-n g" id="total-done">0</div><div class="pstat-l">Complete</div></div>
+        <div class="pstat"><div class="pstat-n a" id="total-studying">0</div><div class="pstat-l">Studying</div></div>
+        <div class="pstat"><div class="pstat-n r" id="total-remaining">0</div><div class="pstat-l">Not Started</div></div>
+        <div class="pstat"><div class="pstat-n o" id="total-topics">0</div><div class="pstat-l">Total Topics</div></div>
+      </div>
+    </div>
+    <div class="big-bar">
+      <div class="big-bar-fill" id="big-bar-fill" style="width:0%"></div>
+      <span class="bar-pct" id="bar-pct">0%</span>
+    </div>
+    <div class="readiness">
+      <span class="readiness-lbl">Readiness:</span>
+      <span class="readiness-badge" id="readiness-badge">Not started</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content" id="content"></main>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CREST CPSA OFFICIAL SYLLABUS DATA
+   Source: CREST Technical Syllabus v2.4
+═══════════════════════════════════════════ */
+const SYLLABUS = [
+  {
+    id: 'A', code: 'A', title: 'Soft Skills & Assessment Management',
+    color: '#8b5cf6', desc: 'Professional skills, engagement management, legal considerations and reporting.',
+    topics: [
+      { id:'A1', title:'Engagement Lifecycle', sub:'Understanding the phases of a penetration test engagement from scoping to reporting' },
+      { id:'A2', title:'Legal & Compliance', sub:'Computer Misuse Act 1990, Data Protection Act, authorisation requirements' },
+      { id:'A3', title:'Scoping & Rules of Engagement', sub:'Defining scope, Rules of Engagement document, out-of-scope handling' },
+      { id:'A4', title:'Reporting', sub:'Report structure, executive summary, technical findings, risk ratings, remediation advice' },
+      { id:'A5', title:'Risk Classification & CVSS', sub:'CVSS v3 scoring, risk ratings, impact and likelihood assessment' },
+      { id:'A6', title:'Client Communication', sub:'Escalation procedures, emergency contacts, change notification during testing' },
+    ]
+  },
+  {
+    id: 'B', code: 'B', title: 'Core Technical Skills',
+    color: '#3b82f6', desc: 'Fundamental technical knowledge underpinning all penetration testing activities.',
+    topics: [
+      { id:'B1', title:'IP Protocols', sub:'TCP/IP, UDP, ICMP — headers, flags, TTL, fragmentation' },
+      { id:'B2', title:'Network Architectures', sub:'Subnetting, CIDR notation, VLANs, DMZs, routing fundamentals' },
+      { id:'B3', title:'Network Mapping & Topology Discovery', sub:'nmap techniques, OS fingerprinting, service version detection, host discovery' },
+      { id:'B4', title:'Filtering Avoidance', sub:'Firewall evasion, fragmentation, decoy scans, source port manipulation' },
+      { id:'B5', title:'Cryptography', sub:'Symmetric/asymmetric encryption, hashing, PKI, TLS/SSL, common weaknesses' },
+      { id:'B6', title:'Applications of Cryptography', sub:'SSH, HTTPS, certificates, VPNs, common implementation flaws' },
+      { id:'B7', title:'File System Permissions', sub:'Unix and Windows file permissions, ACLs, ownership concepts' },
+      { id:'B8', title:'Audit Techniques', sub:'Log analysis, evidence collection, maintaining forensic integrity during testing' },
+    ]
+  },
+  {
+    id: 'C', code: 'C', title: 'Background Information Gathering & Open Source',
+    color: '#06b6d4', desc: 'Passive and active reconnaissance techniques using open source intelligence.',
+    topics: [
+      { id:'C1', title:'Internet Footprinting', sub:'WHOIS, DNS enumeration, Google hacking, Shodan, certificate transparency' },
+      { id:'C2', title:'DNS Interrogation', sub:'Zone transfers, DNS record types (A, MX, NS, TXT, PTR), subdomain enumeration' },
+      { id:'C3', title:'SMTP Fingerprinting', sub:'VRFY, EXPN commands for user enumeration, mail server identification' },
+      { id:'C4', title:'Document Metadata', sub:'Extracting metadata from documents using FOCA, metagoofil, ExifTool' },
+    ]
+  },
+  {
+    id: 'D', code: 'D', title: 'Networking Equipment',
+    color: '#10b981', desc: 'Assessment of routers, switches, firewalls and other network infrastructure.',
+    topics: [
+      { id:'D1', title:'Routers, Switches & Firewalls', sub:'Telnet/SSH access, default credentials, SNMP community strings, config extraction' },
+      { id:'D2', title:'Network Protocols', sub:'STP, CDP, OSPF, BGP weaknesses; ARP poisoning, VLAN hopping, 802.1Q attacks' },
+      { id:'D3', title:'IPSec & VPN', sub:'IKEv1 aggressive mode, PSK cracking, ike-scan enumeration' },
+      { id:'D4', title:'VLAN Security', sub:'Double-tagging attacks, native VLAN exploitation, VLAN hopping techniques' },
+    ]
+  },
+  {
+    id: 'E', code: 'E', title: 'Microsoft Windows Security Assessment',
+    color: '#f59e0b', desc: 'Windows enumeration, exploitation, post-exploitation and privilege escalation.',
+    topics: [
+      { id:'E1', title:'Windows Domain Enumeration', sub:'NetBIOS, nbtscan, nbtstat, LDAP anonymous binds, null sessions, RID cycling' },
+      { id:'E2', title:'Windows Password Security', sub:'LM/NTLM/NTLMv2 hashing, SAM, password policies, John the Ripper, Ophcrack' },
+      { id:'E3', title:'Windows Networking', sub:'SMB, RPC, MSRPC, NetBIOS over TCP/IP, common Windows services' },
+      { id:'E4', title:'Windows Vulnerabilities', sub:'MS08-067, MS17-010, common CVEs; Metasploit exploitation workflow' },
+      { id:'E5', title:'Windows Post-Exploitation', sub:'Meterpreter, hashdump, privilege escalation (getsystem), LSA secrets' },
+      { id:'E6', title:'Patch Management Assessment', sub:'HfNetchk, MBSA, WMI patch enumeration, WSUS assessment' },
+      { id:'E7', title:'Desktop Lockdown & Breakout', sub:'Restricted desktop bypass techniques, ftp.exe shell, Notepad file dialog tricks' },
+      { id:'E8', title:'Pass-the-Hash & Lateral Movement', sub:'PTH attacks, keimpx, psexec, SMB relay attacks' },
+      { id:'E9', title:'Active Directory Attacks', sub:'Kerberoasting, AS-REP roasting, BloodHound, DCSync, GPP passwords, LAPS' },
+    ]
+  },
+  {
+    id: 'F', code: 'F', title: 'Unix Security Assessment',
+    color: '#ef4444', desc: 'Unix/Linux enumeration, exploitation, privilege escalation and post-exploitation.',
+    topics: [
+      { id:'F1', title:'Unix Enumeration', sub:'finger, rpcinfo, rusers, rwhod, showmount, portmapper enumeration' },
+      { id:'F2', title:'Unix Vulnerabilities', sub:'SUID/SGID abuse, world-writable cron jobs, GTFOBins, Linux capabilities' },
+      { id:'F3', title:'Unix Password Security', sub:'unshadow, John the Ripper, /etc/shadow formats ($1$, $5$, $6$), DES' },
+      { id:'F4', title:'NFS Security', sub:'Exports misconfiguration, root_squash/no_root_squash, UID squatting' },
+      { id:'F5', title:'TFTP & File Transfer', sub:'TFTP for config extraction, SCP for exfiltration, TFTP brute force' },
+      { id:'F6', title:'R-Services', sub:'rsh, rlogin, rexec; .rhosts and hosts.equiv exploitation, cleartext credentials' },
+      { id:'F7', title:'X11 Security', sub:'xhost +, .Xauthority theft, xwd screen capture, XDMCP attacks' },
+      { id:'F8', title:'RPC Services', sub:'sadmind exploitation, NFS, mountd, rusersd; Solaris RPC vulnerabilities' },
+      { id:'F9', title:'Unix Post-Exploitation', sub:'/proc filesystem, capability abuse, SUID python/perl/vim GTFOBins, cron persistence' },
+    ]
+  },
+  {
+    id: 'G', code: 'G', title: 'Web Technologies',
+    color: '#d95718', desc: 'Web application security testing including common vulnerabilities and techniques.',
+    topics: [
+      { id:'G1', title:'HTTP & HTTPS', sub:'HTTP methods, headers, status codes, request/response structure, TLS assessment' },
+      { id:'G2', title:'Web Application Fingerprinting', sub:'Server/technology identification, Nikto, banner grabbing, robots.txt, sitemap' },
+      { id:'G3', title:'Web Application Assessment', sub:'Burp Suite proxy setup, spidering, scanning, manual testing workflow' },
+      { id:'G4', title:'SQL Injection', sub:'Error-based, UNION, blind, time-based; database-specific syntax, sqlmap' },
+      { id:'G5', title:'Cross-Site Scripting (XSS)', sub:'Reflected, stored, DOM-based; session hijacking, BeEF, CSP bypass' },
+      { id:'G6', title:'CSRF & Clickjacking', sub:'Anti-CSRF tokens, SameSite cookies, X-Frame-Options, clickjacking PoC' },
+      { id:'G7', title:'File Upload & Path Traversal', sub:'Unrestricted upload, .htaccess abuse, directory traversal, LFI/RFI' },
+      { id:'G8', title:'Authentication & Session Management', sub:'Session fixation, prediction, token weaknesses, cookie flags, HTTPS enforcement' },
+      { id:'G9', title:'Other Web Vulnerabilities', sub:'XXE, SSRF, SSTI, deserialization, HTTP request smuggling, open redirect' },
+    ]
+  },
+  {
+    id: 'H', code: 'H', title: 'Web Testing Techniques',
+    color: '#ec4899', desc: 'Advanced web testing methodology and specific attack techniques.',
+    topics: [
+      { id:'H1', title:'Fuzzing', sub:'Input fuzzing techniques, boundary testing, format string identification' },
+      { id:'H2', title:'CRLF Injection', sub:'HTTP response splitting, header injection, CRLF in redirects' },
+      { id:'H3', title:'Session ID Attacks', sub:'Session prediction, enumeration, fixation, hijacking via XSS' },
+      { id:'H4', title:'Parameter Tampering', sub:'Hidden field manipulation, client-side trust, mass assignment, price tampering' },
+      { id:'H5', title:'Username Enumeration', sub:'Different error messages, timing attacks, SMTP VRFY, login response differences' },
+      { id:'H6', title:'Brute Force & Rate Limiting', sub:'Credential stuffing, account lockout testing, captcha bypass, rate limit circumvention' },
+      { id:'H7', title:'JWT Attacks', sub:'alg:none bypass, weak secret cracking, header injection, claim forgery' },
+      { id:'H8', title:'API Security Testing', sub:'REST API testing, GraphQL introspection, IDOR, broken object level auth' },
+    ]
+  },
+  {
+    id: 'I', code: 'I', title: 'Databases',
+    color: '#14b8a6', desc: 'Database security assessment including MSSQL, MySQL, Oracle and others.',
+    topics: [
+      { id:'I1', title:'Microsoft SQL Server', sub:'SA blank password, xp_cmdshell, sp_configure, linked servers, WAITFOR DELAY' },
+      { id:'I2', title:'MySQL', sub:'Version enumeration, user(), LOAD DATA INFILE, SELECT INTO OUTFILE, UDF abuse' },
+      { id:'I3', title:'Oracle', sub:'SID enumeration, TNS listener, default accounts (SCOTT/TIGER), DBA enumeration' },
+      { id:'I4', title:'NoSQL Databases', sub:'MongoDB unauthenticated access, Redis RCE via config, Elasticsearch exposure' },
+      { id:'I5', title:'Database Post-Exploitation', sub:'Credential extraction, privilege escalation via database, OS interaction techniques' },
+    ]
+  },
+  {
+    id: 'J', code: 'J', title: 'Network & Wireless',
+    color: '#6366f1', desc: 'Network traffic analysis, wireless security assessment and common protocols.',
+    topics: [
+      { id:'J1', title:'SNMP', sub:'Community string enumeration, public/private defaults, MIB walking, SNMPv1/v2 weaknesses' },
+      { id:'J2', title:'Network Traffic Analysis', sub:'Wireshark, tcpdump, Responder, LLMNR/NBT-NS poisoning, credential capture' },
+      { id:'J3', title:'Wireless Security Assessment', sub:'WPA2-PSK cracking, 4-way handshake capture, deauth injection, evil twin' },
+      { id:'J4', title:'Common Services Assessment', sub:'FTP, Telnet, SSH, SMTP, POP3, IMAP, RDP — enumeration and brute force' },
+      { id:'J5', title:'VoIP & SIP', sub:'SIP enumeration, VoIP eavesdropping, VLAN segmentation failures with IP phones' },
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════
+   STATE MANAGEMENT
+═══════════════════════════════════════════ */
+const STORAGE_KEY = 'ca_cpsa_tracker';
+let state = { topics: {}, notes: {}, examDate: null };
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = JSON.parse(raw);
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function setTopicStatus(id, status) {
+  if (state.topics[id] === status) {
+    state.topics[id] = 'none';
+  } else {
+    state.topics[id] = status;
+  }
+  saveState();
+  refreshUI();
+}
+
+function saveNote(id, text) {
+  state.notes[id] = text;
+  saveState();
+}
+
+/* ═══════════════════════════════════════════
+   BUILD UI
+═══════════════════════════════════════════ */
+let currentSection = 'A';
+
+function calcSectionStats(section) {
+  const total = section.topics.length;
+  const done = section.topics.filter(t => state.topics[t.id] === 'done').length;
+  const studying = section.topics.filter(t => state.topics[t.id] === 'studying').length;
+  const pct = Math.round((done / total) * 100);
+  return { total, done, studying, remaining: total - done - studying, pct };
+}
+
+function calcOverallStats() {
+  let totalTopics = 0, totalDone = 0, totalStudying = 0;
+  SYLLABUS.forEach(s => {
+    totalTopics += s.topics.length;
+    s.topics.forEach(t => {
+      if (state.topics[t.id] === 'done') totalDone++;
+      if (state.topics[t.id] === 'studying') totalStudying++;
+    });
+  });
+  return {
+    total: totalTopics, done: totalDone, studying: totalStudying,
+    remaining: totalTopics - totalDone - totalStudying,
+    pct: Math.round((totalDone / totalTopics) * 100)
+  };
+}
+
+function buildSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  let html = `<div class="sidebar-title">Syllabus Sections</div>`;
+
+  SYLLABUS.forEach(section => {
+    const stats = calcSectionStats(section);
+    const isActive = currentSection === section.id;
+    html += `
+      <div class="nav-item ${isActive ? 'active' : ''}" onclick="switchSection('${section.id}')">
+        <div class="nav-dot" style="background:${section.color}22;color:${section.color};border:1.5px solid ${section.color}44;">
+          ${section.code}
+        </div>
+        <div class="nav-label">
+          <div class="nav-label-title">${section.title.length > 22 ? section.title.substring(0,22)+'…' : section.title}</div>
+          <div class="nav-mini-bar"><div class="nav-mini-fill" style="width:${stats.pct}%;background:${section.color}"></div></div>
+        </div>
+        <div class="nav-pct" style="color:${section.color}">${stats.pct}%</div>
+      </div>`;
+  });
+
+  sidebar.innerHTML = html;
+}
+
+function buildContent() {
+  const section = SYLLABUS.find(s => s.id === currentSection);
+  const stats = calcSectionStats(section);
+  const content = document.getElementById('content');
+
+  let topicsHtml = '';
+  section.topics.forEach(topic => {
+    const status = state.topics[topic.id] || 'none';
+    const note = state.notes[topic.id] || '';
+    const hasNotes = note.length > 0;
+
+    topicsHtml += `
+      <div class="topic-card ${status} ${hasNotes ? 'has-notes' : ''}" id="card-${topic.id}">
+        <div class="topic-row" onclick="toggleNotes('${topic.id}')">
+          <div class="topic-check">${status === 'done' ? '✓' : status === 'studying' ? '◎' : ''}</div>
+          <div class="topic-id">${topic.id}</div>
+          <div class="topic-text">
+            <div class="topic-title">${topic.title}</div>
+            <div class="topic-sub">${topic.sub}</div>
+          </div>
+          <div class="topic-actions" onclick="event.stopPropagation()">
+            <button class="btn-status studying-btn ${status === 'studying' ? 'studying-btn' : ''}"
+              onclick="setTopicStatus('${topic.id}', 'studying')">
+              ${status === 'studying' ? '◎ Studying' : 'Studying'}
+            </button>
+            <button class="btn-status done-btn ${status === 'done' ? 'done-btn' : ''}"
+              onclick="setTopicStatus('${topic.id}', 'done')">
+              ${status === 'done' ? '✓ Done' : 'Done'}
+            </button>
+          </div>
+          <button class="notes-toggle" onclick="event.stopPropagation();toggleNotes('${topic.id}')">
+            ${hasNotes ? '📝' : '+ note'}
+          </button>
+        </div>
+        <div class="topic-notes-wrap">
+          <textarea class="topic-notes" placeholder="Add your study notes here..."
+            onblur="saveNote('${topic.id}', this.value)"
+            oninput="markHasNote('${topic.id}', this.value)"
+          >${note}</textarea>
+        </div>
+      </div>`;
+  });
+
+  content.innerHTML = `
+    <div class="section-header">
+      <div class="section-badge" style="background:${section.color}22;border-color:${section.color}44;color:${section.color}">
+        Appendix ${section.code}
+      </div>
+      <div class="section-title">${section.title}</div>
+      <div class="section-desc">${section.desc}</div>
+    </div>
+
+    <div class="section-progress">
+      <svg class="sp-ring" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="22" fill="none" stroke="var(--border2)" stroke-width="5"/>
+        <circle cx="26" cy="26" r="22" fill="none" stroke="${section.color}" stroke-width="5"
+          stroke-linecap="round"
+          stroke-dasharray="${2*Math.PI*22}"
+          stroke-dashoffset="${2*Math.PI*22 * (1 - stats.pct/100)}"
+          transform="rotate(-90 26 26)"
+          style="transition:stroke-dashoffset .6s ease"/>
+      </svg>
+      <div class="sp-info">
+        <div class="sp-pct">${stats.pct}% <span style="font-size:14px;color:var(--text3);font-family:var(--body);font-weight:400">complete</span></div>
+        <div class="sp-lbl">${stats.done} of ${stats.total} topics done · ${stats.studying} in progress</div>
+        <div class="sp-bar"><div class="sp-bar-fill" style="width:${stats.pct}%;background:${section.color}"></div></div>
+      </div>
+      <div class="sp-counts">
+        <div class="sp-count"><div class="sp-count-n g">${stats.done}</div><div class="sp-count-l">Done</div></div>
+        <div class="sp-count"><div class="sp-count-n" style="color:var(--amber)">${stats.studying}</div><div class="sp-count-l">Studying</div></div>
+        <div class="sp-count"><div class="sp-count-n r">${stats.remaining}</div><div class="sp-count-l">Left</div></div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot not-started"></div>Not started</div>
+      <div class="legend-item"><div class="legend-dot studying"></div>Currently studying</div>
+      <div class="legend-item"><div class="legend-dot done"></div>Complete</div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="markAllSection('${section.id}', 'done')">✓ Mark all done</button>
+      <button class="qa-btn" onclick="markAllSection('${section.id}', 'studying')">◎ Mark all studying</button>
+      <button class="qa-btn" onclick="markAllSection('${section.id}', 'none')">↺ Reset section</button>
+    </div>
+
+    <div class="topics-grid">${topicsHtml}</div>`;
+}
+
+function updateOverall() {
+  const stats = calcOverallStats();
+  document.getElementById('total-done').textContent = stats.done;
+  document.getElementById('total-studying').textContent = stats.studying;
+  document.getElementById('total-remaining').textContent = stats.remaining;
+  document.getElementById('total-topics').textContent = stats.total;
+  document.getElementById('big-bar-fill').style.width = stats.pct + '%';
+  document.getElementById('bar-pct').textContent = stats.pct + '%';
+
+  const badge = document.getElementById('readiness-badge');
+  if (stats.pct === 0) { badge.textContent = 'Not started'; badge.className = 'readiness-badge'; }
+  else if (stats.pct < 25) { badge.textContent = 'Just beginning'; badge.className = 'readiness-badge'; }
+  else if (stats.pct < 50) { badge.textContent = 'Building knowledge'; badge.className = 'readiness-badge'; }
+  else if (stats.pct < 75) { badge.textContent = 'Good progress'; badge.className = 'readiness-badge'; }
+  else if (stats.pct < 90) { badge.textContent = 'Almost ready'; badge.className = 'readiness-badge'; }
+  else { badge.textContent = '🎯 Ready to sit!'; badge.className = 'readiness-badge ready'; }
+}
+
+function refreshUI() {
+  buildSidebar();
+  buildContent();
+  updateOverall();
+}
+
+function switchSection(id) {
+  currentSection = id;
+  refreshUI();
+  document.getElementById('content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleNotes(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('notes-open');
+  if (card.classList.contains('notes-open')) {
+    card.querySelector('.topic-notes').focus();
+  }
+}
+
+function markHasNote(id, value) {
+  const card = document.getElementById('card-' + id);
+  if (value.length > 0) card.classList.add('has-notes');
+  else card.classList.remove('has-notes');
+}
+
+function markAllSection(sectionId, status) {
+  const section = SYLLABUS.find(s => s.id === sectionId);
+  section.topics.forEach(t => {
+    state.topics[t.id] = status;
+  });
+  saveState();
+  refreshUI();
+}
+
+function confirmReset() {
+  if (confirm('Reset ALL progress? This cannot be undone.')) {
+    state = { topics: {}, notes: {}, examDate: state.examDate };
+    saveState();
+    refreshUI();
+  }
+}
+
+/* ═══════════════════════════════════════════
+   COUNTDOWN
+═══════════════════════════════════════════ */
+function updateCountdown() {
+  const examDate = state.examDate;
+  const numEl = document.getElementById('countdownNum');
+  const subEl = document.getElementById('countdownSub');
+  if (!examDate) {
+    numEl.textContent = '—';
+    subEl.textContent = 'Set your exam date →';
+    return;
+  }
+  const now = new Date();
+  const exam = new Date(examDate);
+  const diff = Math.ceil((exam - now) / (1000 * 60 * 60 * 24));
+  if (diff < 0) { numEl.textContent = '✓'; subEl.textContent = 'Exam date has passed'; return; }
+  if (diff === 0) { numEl.textContent = '0'; subEl.textContent = 'Exam is TODAY!'; return; }
+  numEl.textContent = diff;
+  numEl.style.color = diff <= 7 ? 'var(--red)' : diff <= 30 ? 'var(--amber)' : 'var(--orange)';
+  subEl.textContent = exam.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+document.getElementById('examDate').addEventListener('change', function() {
+  state.examDate = this.value;
+  saveState();
+  updateCountdown();
+});
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+loadState();
+
+if (state.examDate) {
+  document.getElementById('examDate').value = state.examDate;
+}
+
+refreshUI();
+updateCountdown();
+</script>
+</body>
+</html>
